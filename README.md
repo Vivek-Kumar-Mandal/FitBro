@@ -101,8 +101,6 @@ How to use:
 
 ## 9. Screenshots
 
-Add screenshots or animated GIFs to `project/src/assets/screenshots/` and replace the placeholders below.
-
 ![Home Page](project/src/assets/screenshots/home-page.png)
 ![Meal Planner](project/src/assets/screenshots/meal-planner.png)
 ![Pose Analyzer](project/src/assets/screenshots/pose-analyzer.png)
