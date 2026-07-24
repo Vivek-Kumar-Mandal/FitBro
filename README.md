@@ -99,7 +99,7 @@ How to use:
 2. Install Python dependencies (create a venv and install packages listed in the notebook or create a `requirements.txt`).
 3. Run cells to process video or webcam input; Gradio demo cells can be used for quick interactive demos.
 
-## 9. Screenshots (placeholders)
+## 9. Screenshots
 
 Add screenshots or animated GIFs to `project/src/assets/screenshots/` and replace the placeholders below.
 
