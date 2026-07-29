@@ -32,14 +32,17 @@ const LoadingSpinner = () => (
 function HomePage() {
   return (
     <main className="w-full">
-      <HeroSection />
-      <ProductsSection />
-      <WhyUsSection />
-      <FaqSection />
-      <ContactSection />
+      <Suspense fallback={<LoadingSpinner />}>
+        <HeroSection />
+        <ProductsSection />
+        <WhyUsSection />
+        <FaqSection />
+        <ContactSection />
+      </Suspense>
     </main>
   );
 }
+
 
 // Single SignedOut Redirect
 function ProtectedRoute({ children }) {
