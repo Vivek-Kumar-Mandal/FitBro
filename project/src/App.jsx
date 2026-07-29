@@ -5,24 +5,24 @@ import Footer from './components/Footer';
 import FallbackPage from './components/FallbackPage';
 import ErrorBoundary from './components/ErrorBoundary';
 import './App.css';
-import FitnessPlannerPage from './pages/FitnessPlannerPage';
-import WorkoutPlannerPage from './pages/WorkoutPlannerPage';
-import WorkoutSessionPage from './pages/WorkoutSessionPage';
-import MealPlannerPage from './pages/MealPlannerPage';
-import PoseCorrectionPage from './pages/PoseCorrectionPage';
 import { SignedIn, SignedOut, RedirectToSignIn } from "@clerk/clerk-react";
 
-// Lazy load components
+// Lazy Load
 const HeroSection = lazy(() => import('./components/HeroSection'));
 const ProductsSection = lazy(() => import('./components/ProductsSection'));
 const WhyUsSection = lazy(() => import('./components/WhyUsSection'));
 const ContactSection = lazy(() => import('./components/ContactSection'));
 const FaqSection = lazy(() => import('./components/FaqSection'));
+
 const TrainersPage = lazy(() => import('./pages/TrainersPage'));
 const BookingPage = lazy(() => import('./pages/BookingPage'));
 const VideoCallPage = lazy(() => import('./pages/VideoCallPage'));
+const FitnessPlannerPage = lazy(() => import('./pages/FitnessPlannerPage'));
+const WorkoutPlannerPage = lazy(() => import('./pages/WorkoutPlannerPage'));
+const WorkoutSessionPage = lazy(() => import('./pages/WorkoutSessionPage'));
+const MealPlannerPage = lazy(() => import('./pages/MealPlannerPage'));
+const PoseCorrectionPage = lazy(() => import('./pages/PoseCorrectionPage'));
 
-// Loading component
 const LoadingSpinner = () => (
   <div className="flex justify-center items-center h-screen">
     <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#178582]"></div>
@@ -32,14 +32,22 @@ const LoadingSpinner = () => (
 function HomePage() {
   return (
     <main className="w-full">
-      <Suspense fallback={<LoadingSpinner />}>
-        <HeroSection />
-        <ProductsSection />
-        <WhyUsSection />
-        <FaqSection />
-        <ContactSection />
-      </Suspense>
+      <HeroSection />
+      <ProductsSection />
+      <WhyUsSection />
+      <FaqSection />
+      <ContactSection />
     </main>
+  );
+}
+
+// Single SignedOut Redirect
+function ProtectedRoute({ children }) {
+  return (
+    <>
+      <SignedIn>{children}</SignedIn>
+      <SignedOut><RedirectToSignIn /></SignedOut>
+    </>
   );
 }
 
@@ -51,81 +59,24 @@ export default function App() {
       <Navbar />
       <div className="flex-grow w-full">
         <ErrorBoundary>
+          {/* One master suspense layer */}
           <Suspense fallback={<LoadingSpinner />}>
             <Routes location={location}>
+              
+              {/* Public Routes */}
               <Route path="/" element={<HomePage />} />
-              <Route path="/trainers" element={
-                <Suspense fallback={<LoadingSpinner />}>
-                  <TrainersPage />
-                </Suspense>
-              } />
-              <Route path="/booking/:trainerId" element={
-                <SignedIn>
-                  <Suspense fallback={<LoadingSpinner />}>
-                    <BookingPage />
-                  </Suspense>
-                </SignedIn>
-              } />
-              <Route path="/booking/:trainerId" element={
-                <SignedOut>
-                  <RedirectToSignIn />
-                </SignedOut>
-              } />
-              <Route path="/video-call/:sessionId" element={
-                <Suspense fallback={<LoadingSpinner />}>
-                  <VideoCallPage />
-                </Suspense>
-              } />
-              <Route path="/fitness-planner" element={
-                <SignedIn>
-                  <FitnessPlannerPage />
-                </SignedIn>
-              } />
-              <Route path="/fitness-planner" element={
-                <SignedOut>
-                  <RedirectToSignIn />
-                </SignedOut>
-              } />
-              <Route path="/workout-planner" element={
-                <SignedIn>
-                  <WorkoutPlannerPage />
-                </SignedIn>
-              } />
-              <Route path="/workout-planner" element={
-                <SignedOut>
-                  <RedirectToSignIn />
-                </SignedOut>
-              } />
-              <Route path="/meal-planner" element={
-                <SignedIn>
-                  <MealPlannerPage />
-                </SignedIn>
-              } />
-              <Route path="/meal-planner" element={
-                <SignedOut>
-                  <RedirectToSignIn />
-                </SignedOut>
-              } />
-              <Route path="/workout-session/:planId" element={
-                <SignedIn>
-                  <WorkoutSessionPage />
-                </SignedIn>
-              } />
-              <Route path="/workout-session/:planId" element={
-                <SignedOut>
-                  <RedirectToSignIn />
-                </SignedOut>
-              } />
-              <Route path="/pose-correction/:exerciseName" element={
-                <SignedIn>
-                  <PoseCorrectionPage />
-                </SignedIn>
-              } />
-              <Route path="/pose-correction/:exerciseName" element={
-                <SignedOut>
-                  <RedirectToSignIn />
-                </SignedOut>
-              } />
+              <Route path="/trainers" element={<TrainersPage />} />
+              <Route path="/video-call/:sessionId" element={<VideoCallPage />} />
+
+              {/* Private Routes */}
+              <Route path="/booking/:trainerId" element={<ProtectedRoute><BookingPage /></ProtectedRoute>} />
+              <Route path="/fitness-planner" element={<ProtectedRoute><FitnessPlannerPage /></ProtectedRoute>} />
+              <Route path="/workout-planner" element={<ProtectedRoute><WorkoutPlannerPage /></ProtectedRoute>} />
+              <Route path="/meal-planner" element={<ProtectedRoute><MealPlannerPage /></ProtectedRoute>} />
+              <Route path="/workout-session/:planId" element={<ProtectedRoute><WorkoutSessionPage /></ProtectedRoute>} />
+              <Route path="/pose-correction/:exerciseName" element={<ProtectedRoute><PoseCorrectionPage /></ProtectedRoute>} />
+
+              {/* Catch-all 404 */}
               <Route path="*" element={<FallbackPage />} />
             </Routes>
           </Suspense>
@@ -134,4 +85,4 @@ export default function App() {
       <Footer />
     </div>
   );
-}
+    }
